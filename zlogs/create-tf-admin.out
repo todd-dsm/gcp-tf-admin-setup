@@ -1,0 +1,230 @@
++ declare -r svcAcctName=terraform
++ serviceEmail=terraform@tester-01-yo.iam.gserviceaccount.com
++ serviceAccount=serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
++ envVARs=('TF_ADMIN' 'TF_CREDS' 'TF_VAR_org_id')
++ declare -a envVARs
++ gcpRoles=('viewer' 'storage.admin')
++ declare -a gcpRoles
++ projAPIs=('cloudresourcemanager' 'cloudbilling' 'iam' 'compute')
++ declare -a projAPIs
++ orgPerms=('resourcemanager.projectCreator' 'billing.user')
++ declare -a orgPerms
++ printf '\n\n%s\n' 'Verifying all ENV variables are available...'
+
+
+Verifying all ENV variables are available...
++ for reqdVar in "${envVARs[@]}"
++ [[ -z tester-01-yo ]]
++ pMsg '  * TF_ADMIN = tester-01-yo'
++ theMessage='  * TF_ADMIN = tester-01-yo'
++ printf '%s\n' '  * TF_ADMIN = tester-01-yo'
+  * TF_ADMIN = tester-01-yo
++ for reqdVar in "${envVARs[@]}"
++ [[ -z /Users/USER/.config/gcloud/tester-01-yo.json ]]
++ pMsg '  * TF_CREDS = /Users/USER/.config/gcloud/tester-01-yo.json'
++ theMessage='  * TF_CREDS = /Users/USER/.config/gcloud/tester-01-yo.json'
++ printf '%s\n' '  * TF_CREDS = /Users/USER/.config/gcloud/tester-01-yo.json'
+  * TF_CREDS = /Users/USER/.config/gcloud/tester-01-yo.json
++ for reqdVar in "${envVARs[@]}"
++ [[ -z 235711131719 ]]
++ pMsg '  * TF_VAR_org_id = 235711131719'
++ theMessage='  * TF_VAR_org_id = 235711131719'
++ printf '%s\n' '  * TF_VAR_org_id = 235711131719'
+  * TF_VAR_org_id = 235711131719
++ pMsg 'All required variables check-out; advancing to the next step.'
++ theMessage='All required variables check-out; advancing to the next step.'
++ printf '%s\n' 'All required variables check-out; advancing to the next step.'
+All required variables check-out; advancing to the next step.
++ gcloud projects create tester-01-yo --organization 235711131719 --set-as-default
+Create in progress for [https://cloudresourcemanager.googleapis.com/v1/projects/tester-01-yo].
+Waiting for [operations/cp.7669847850472242175] to finish...
+...done.
+Updated property [core/project] to [tester-01-yo].
++ gcloud beta billing projects link tester-01-yo --billing-account XOXOXO-XOXOX-XOXOXO
+billingAccountName: billingAccounts/XOXOXO-XOXOX-XOXOXO
+billingEnabled: true
+name: projects/tester-01-yo/billingInfo
+projectId: tester-01-yo
++ gcloud config set project tester-01-yo
+Updated property [core/project].
++ pMsg 'Creating '\''terraform'\'' service-account...'
++ theMessage='Creating '\''terraform'\'' service-account...'
++ printf '%s\n' 'Creating '\''terraform'\'' service-account...'
+Creating 'terraform' service-account...
++ gcloud iam service-accounts create terraform --display-name 'Terraform admin account for USER'
+Created service account [terraform].
++ pMsg 'Creating keys for '\''terraform'\'' service-account...'
++ theMessage='Creating keys for '\''terraform'\'' service-account...'
++ printf '%s\n' 'Creating keys for '\''terraform'\'' service-account...'
+Creating keys for 'terraform' service-account...
++ gcloud iam service-accounts keys create /Users/USER/.config/gcloud/tester-01-yo.json --iam-account terraform@tester-01-yo.iam.gserviceaccount.com
+created key [b6647f89e9216cd87d5a0f2eb3cf8e939c7733bd] of type [json] as [/Users/USER/.config/gcloud/tester-01-yo.json] for [terraform@tester-01-yo.iam.gserviceaccount.com]
++ printf '\n\n%s\n' 'Granting roles to tester-01-yo...'
+
+
+Granting roles to tester-01-yo...
++ for adminRole in "${gcpRoles[@]}"
++ gcloud projects add-iam-policy-binding tester-01-yo --member serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com --role roles/viewer
+bindings:
+- members:
+  - user:USER@ttest.info
+  role: roles/owner
+- members:
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  role: roles/viewer
+etag: BwV5UfbdTVE=
+version: 1
++ pMsg '  * viewer'
++ theMessage='  * viewer'
++ printf '%s\n' '  * viewer'
+  * viewer
++ for adminRole in "${gcpRoles[@]}"
++ gcloud projects add-iam-policy-binding tester-01-yo --member serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com --role roles/storage.admin
+bindings:
+- members:
+  - user:USER@ttest.info
+  role: roles/owner
+- members:
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  role: roles/storage.admin
+- members:
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  role: roles/viewer
+etag: BwV5UfcA9Uw=
+version: 1
++ pMsg '  * storage.admin'
++ theMessage='  * storage.admin'
++ printf '%s\n' '  * storage.admin'
+  * storage.admin
++ printf '\n\n%s\n' 'Enabling required APIs for tester-01-yo...'
+
+
+Enabling required APIs for tester-01-yo...
++ for adminAPI in "${projAPIs[@]}"
++ gcloud services enable cloudresourcemanager.googleapis.com
+Operation "operations/acf.5a551bb0-2c74-4f80-9ac6-3d5936fae1bf" finished successfully.
++ pMsg '  * cloudresourcemanager'
++ theMessage='  * cloudresourcemanager'
++ printf '%s\n' '  * cloudresourcemanager'
+  * cloudresourcemanager
++ for adminAPI in "${projAPIs[@]}"
++ gcloud services enable cloudbilling.googleapis.com
+Operation "operations/acf.99d48390-0eea-4a32-a759-b7e28230401a" finished successfully.
++ pMsg '  * cloudbilling'
++ theMessage='  * cloudbilling'
++ printf '%s\n' '  * cloudbilling'
+  * cloudbilling
++ for adminAPI in "${projAPIs[@]}"
++ gcloud services enable iam.googleapis.com
+Operation "operations/acf.beb8b020-8d2b-458c-8447-1819dcaa805d" finished successfully.
++ pMsg '  * iam'
++ theMessage='  * iam'
++ printf '%s\n' '  * iam'
+  * iam
++ for adminAPI in "${projAPIs[@]}"
++ gcloud services enable compute.googleapis.com
+Operation "operations/acf.2a1b724b-fa42-4902-85a1-eb3e9e06905f" finished successfully.
++ pMsg '  * compute'
++ theMessage='  * compute'
++ printf '%s\n' '  * compute'
+  * compute
++ printf '\n\n%s\n' 'Adding organization/folder-level permissions for tester-01-yo...'
+
+
+Adding organization/folder-level permissions for tester-01-yo...
++ for adminPerms in "${orgPerms[@]}"
++ gcloud organizations add-iam-policy-binding 235711131719 --member serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com --role roles/resourcemanager.projectCreator
+bindings:
+- members:
+  - domain:ttest.info
+  role: roles/billing.creator
+- members:
+  - serviceAccount:terraform@tester-00-yo.iam.gserviceaccount.com
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  role: roles/billing.user
+- members:
+  - user:admin@ttest.info
+  role: roles/iam.securityReviewer
+- members:
+  - user:USER@ttest.info
+  role: roles/iam.serviceAccountKeyAdmin
+- members:
+  - user:USER@ttest.info
+  role: roles/iap.admin
+- members:
+  - user:USER@ttest.info
+  role: roles/owner
+- members:
+  - user:admin@ttest.info
+  - user:USER@ttest.info
+  role: roles/resourcemanager.organizationAdmin
+- members:
+  - domain:ttest.info
+  - serviceAccount:terraform@tester-00-yo.iam.gserviceaccount.com
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  - user:admin@ttest.info
+  - user:USER@ttest.info
+  role: roles/resourcemanager.projectCreator
+- members:
+  - user:admin@ttest.info
+  role: roles/resourcemanager.projectIamAdmin
+etag: BwV5Ufx1q-4=
++ pMsg '  * resourcemanager.projectCreator'
++ theMessage='  * resourcemanager.projectCreator'
++ printf '%s\n' '  * resourcemanager.projectCreator'
+  * resourcemanager.projectCreator
++ for adminPerms in "${orgPerms[@]}"
++ gcloud organizations add-iam-policy-binding 235711131719 --member serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com --role roles/billing.user
+bindings:
+- members:
+  - domain:ttest.info
+  role: roles/billing.creator
+- members:
+  - serviceAccount:terraform@tester-00-yo.iam.gserviceaccount.com
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  role: roles/billing.user
+- members:
+  - user:admin@ttest.info
+  role: roles/iam.securityReviewer
+- members:
+  - user:USER@ttest.info
+  role: roles/iam.serviceAccountKeyAdmin
+- members:
+  - user:USER@ttest.info
+  role: roles/iap.admin
+- members:
+  - user:USER@ttest.info
+  role: roles/owner
+- members:
+  - user:admin@ttest.info
+  - user:USER@ttest.info
+  role: roles/resourcemanager.organizationAdmin
+- members:
+  - domain:ttest.info
+  - serviceAccount:terraform@tester-00-yo.iam.gserviceaccount.com
+  - serviceAccount:terraform@tester-01-yo.iam.gserviceaccount.com
+  - user:admin@ttest.info
+  - user:USER@ttest.info
+  role: roles/resourcemanager.projectCreator
+- members:
+  - user:admin@ttest.info
+  role: roles/resourcemanager.projectIamAdmin
+etag: BwV5UfyOHeA=
++ pMsg '  * billing.user'
++ theMessage='  * billing.user'
++ printf '%s\n' '  * billing.user'
+  * billing.user
++ printf '\n\n%s\n' 'Creating a bucket for remote terraform state...'
+
+
+Creating a bucket for remote terraform state...
++ gsutil mb -p tester-01-yo gs://tester-01-yo
+Creating gs://tester-01-yo/...
++ cat
++ gsutil versioning set on gs://tester-01-yo
+Enabling versioning for gs://tester-01-yo/...
++ export GOOGLE_APPLICATION_CREDENTIALS=/Users/USER/.config/gcloud/tester-01-yo.json
++ GOOGLE_APPLICATION_CREDENTIALS=/Users/USER/.config/gcloud/tester-01-yo.json
++ export GOOGLE_PROJECT=tester-01-yo
++ GOOGLE_PROJECT=tester-01-yo
++ exit 0
