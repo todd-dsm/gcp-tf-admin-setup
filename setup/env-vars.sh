@@ -50,10 +50,9 @@ esac
 # -----------------------------------------------------------------------------
 # Same for either ENV; depends on case
 export TF_VAR_cluster_name="$newClusterName"
-export TF_VAR_bucket_name="${TF_ADMIN}"
-export planFile="/tmp/kubes-${newClusterName}.plan"
-# Changes rarely, if ever => bottom of the file
 #export TF_ADMIN="tf-admin-${USER}"
 export TF_ADMIN="tester-01-yo"
+export TF_VAR_bucket_name="${TF_ADMIN}"
 export TF_CREDS="$HOME/.config/gcloud/${TF_ADMIN}.json"
+export planFile="/tmp/kubes-${newClusterName}.plan"
 set +x
